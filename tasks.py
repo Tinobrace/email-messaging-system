@@ -12,8 +12,18 @@ def send_mail_task(email):
     smtp_user = 'valen.uchenna@gmail.com'
     smtp_pass = 'iflu vqen naad dlba'  # Use an app-specific password
 
-    msg = MIMEText(f"Test email sent at {datetime.now()}")
-    msg['Subject'] = 'Test Email For You, Val!'
+    ## msg = MIMEText(f"Mr. Val, this is a Test email specially sent to you at {datetime.now()} for your perusal")
+    msg = MIMEText(f"Dear Val,\n\n"
+        "We hope this email finds you well.\n"
+        "Thank you for being a valued part of our community.\n"
+        "We wanted to share some exciting updates with you.\n"
+        "Stay tuned for upcoming features and improvements.\n"
+        "Your feedback helps us improve our services.\n"
+        "Feel free to reach out with any suggestions.\n"
+        "We appreciate your continued support.\n"
+        "Have a great day!\n"
+        "Best regards,\nSterling Bank Technology Team!\n\n {datetime.now()}")
+    msg['Subject'] = 'Sterling Bank Cares!'
     msg['From'] = smtp_user
     msg['To'] = email
 
