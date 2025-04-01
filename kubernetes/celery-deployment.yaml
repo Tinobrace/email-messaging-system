@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  labels:
+    app: celery-worker
+spec:
+  replicas: 2  # Number of worker pods
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+      - name: celery-worker
+        image: my-celery-worker  # Ensure this image is built & pushed
+        command: ["celery"]
+        args: ["-A", "tasks", "worker", "--loglevel=info"]
+        env:
+        - name: CELERY_BROKER_URL
+          value: "pyamqp://guest@rabbitmq//"
+        - name: CELERY_RESULT_BACKEND
+          value: "rpc://"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          exec:
+            command: ["sh", "-c", "celery -A tasks inspect ping"]
+          initialDelaySeconds: 10
+          periodSeconds: 30

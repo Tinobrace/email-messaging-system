@@ -1,7 +1,7 @@
 from flask import Flask, request, send_file
 import logging
 from datetime import datetime
-from tasks import send_mail_task
+from tasks import send_mail_task  # Explicitly import it
 
 app = Flask(__name__)
 
