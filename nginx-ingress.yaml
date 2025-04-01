@@ -1,0 +1,23 @@
+# Nginx Ingress Example
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  tls:
+  - hosts:
+    - 192.168.49.2
+    secretName: tls-secret
+  rules:
+  - host: 192.168.49.2
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask
+            port:
+              number: 80

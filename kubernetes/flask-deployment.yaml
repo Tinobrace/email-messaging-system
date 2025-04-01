@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+spec:
+  replicas: 1  # Start with 1 replica for debugging
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+        - name: flask
+          image: docker.io/kuberval/rabbitmq_flask:latest  # Ensure this image exists
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000  # If using Gunicorn, update to match Gunicorn's bind port
+          env:
+            - name: CELERY_BROKER_URL
+              value: "amqp://rabbitmq:5672"
+          command: ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "app:app"]  # Ensure this is correct
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask
+spec:
+  selector:
+    app: flask
+  ports:
+    - protocol: TCP
+      port: 8000  # Make sure this matches Gunicorn’s port
+      targetPort: 8000
